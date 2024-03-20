@@ -1,0 +1,3812 @@
+openapi: 3.0.3
+info:
+  description: Visier APIs for data and job handling
+  license:
+    name: "Apache License, Version 2.0"
+    url: https://www.apache.org/licenses/LICENSE-2.0
+  title: Visier Data and Job Handling APIs
+  version: 22222222.99201.1200
+  x-api-status-urls: false
+  x-konfig-has-globally-required-security: true
+servers:
+- url: "https://{vanity-name}.api.visier.io"
+  variables:
+    vanity-name:
+      default: vanity
+security:
+- ApiKeyAuth: []
+  BearerAuth: []
+- ApiKeyAuth: []
+  CookieAuth: []
+- ApiKeyAuth: []
+  OAuth2Auth: []
+tags:
+- name: DataAndJobHandling
+paths:
+  /v1/op/data-connector-credentials:
+    get:
+      description: |-
+        Use this API to retrieve a list of the connector credentials in a specified tenant. Connector credentials allow
+         Visier to retrieve data from your source systems through an integration user in the source system.
+      operationId: DataAndJobHandling_DataConnectorCredentials
+      parameters:
+      - description: The tenant code of a specific analytic tenant that you want to
+          retrieve for.
+        explode: true
+        in: query
+        name: tenantCode
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: The limit to retrieve.
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          format: int32
+          type: integer
+        style: form
+      - description: "The index to start retrieving results from, also known as offset.\
+          \ The index begins at 0."
+        explode: true
+        in: query
+        name: start
+        required: false
+        schema:
+          format: int32
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExtractorCredentialsAPIDTO'
+          description: OK
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+          description: Default error response
+      summary: Retrieve a list of all data connector credentials
+      tags:
+      - DataAndJobHandling
+      x-konfig-operation-can-have-single-parameter: true
+      x-konfig-single-parameter-schema: konfig-generated-schema-single-parameter-schema-get--v1-op-data-connector-credentials
+      x-accepts: application/json
+    post:
+      description: |-
+        Use this API to create connector credentials for a specified tenant. Connector credentials allow Visier to
+         retrieve data from your source systems through an integration user in the source system.
+      operationId: DataAndJobHandling_CreateConnectorCredential
+      parameters:
+      - description: The tenant code of a specific analytic tenant that you want to
+          create the credential for.
+        explode: true
+        in: query
+        name: tenantCode
+        required: false
+        schema:
+          type: string
+        style: form
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DataProviderAuthInformationDTO'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CredentialCreationAPIResponseDTO'
+          description: OK
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+          description: Default error response
+      summary: Create a connector credential
+      tags:
+      - DataAndJobHandling
+      x-konfig-operation-can-have-single-parameter: true
+      x-konfig-single-parameter-schema: konfig-generated-schema-single-parameter-schema-post--v1-op-data-connector-credentials
+      x-content-type: application/json
+      x-accepts: application/json
+  /v1/op/data-connectors:
+    get:
+      description: |-
+        Use this API to retrieve a list of the data connectors in a specified tenant. Data connectors are an alternative
+         to generating flat files and transferring them to Visier via SFTP.
+      operationId: DataAndJobHandling_DataConnectors
+      parameters:
+      - description: The tenant code of a specific analytic tenant that you want to
+          retrieve for.
+        explode: true
+        in: query
+        name: tenantCode
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: The limit to retrieve.
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          format: int32
+          type: integer
+        style: form
+      - description: "The index to start retrieving results from, also known as offset.\
+          \ The index begins at 0."
+        explode: true
+        in: query
+        name: start
+        required: false
+        schema:
+          format: int32
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImportDefinitionsAPIDTO'
+          description: OK
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+          description: Default error response
+      summary: Retrieve a list of all data connectors
+      tags:
+      - DataAndJobHandling
+      x-konfig-operation-can-have-single-parameter: true
+      x-konfig-single-parameter-schema: konfig-generated-schema-single-parameter-schema-get--v1-op-data-connectors
+      x-accepts: application/json
+  /v1/op/data-connectors/assignCredentials:
+    post:
+      description: This API allows you to assign a connector credential to a data
+        connector.
+      operationId: DataAndJobHandling_AssignConnectorCredential
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssignConnectorCredentialRequest'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssignConnectorCredentialsResponseDTO'
+          description: OK
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+          description: Default error response
+      summary: Assign connector credentials to data connectors
+      tags:
+      - DataAndJobHandling
+      x-konfig-operation-can-have-single-parameter: true
+      x-konfig-single-parameter-schema: konfig-generated-schema-single-parameter-schema-post--v1-op-data-connectors-assignCredentials
+      x-content-type: application/json
+      x-accepts: application/json
+  /v1/op/data-versions/disable:
+    put:
+      description: |-
+        If you discover that a data version is not what is expected after running metric value validation on a data load,
+         you may want to disable the data version for that processing job.
+
+         Use this API to disable the latest enabled data versions for affected analytic tenants or to disable a particular
+         data version for each analytic tenant.
+
+         Note: Disabling an older data version may not have an effect on the state of the solution.
+      operationId: DataAndJobHandling_DisableDV
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DisableDVRequest'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DisableDVResponse'
+          description: OK
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+          description: Default error response
+      summary: Disable data versions for a list of analytic tenants
+      tags:
+      - DataAndJobHandling
+      x-konfig-operation-can-have-single-parameter: true
+      x-konfig-single-parameter-schema: konfig-generated-schema-single-parameter-schema-put--v1-op-data-versions-disable
+      x-content-type: application/json
+      x-accepts: application/json
+  /v1/op/data/startExtractAndLoad:
+    post:
+      description: |-
+        Use this API to generate extraction jobs for a list of analytic tenants or for the administrating tenant.
+         This API creates a dispatching job that generates one extraction job per tenant. The extraction jobs retrieve
+         data from your source systems through data connectors. The dispatching job is the "parent" of the extraction
+         jobs and its job ID is returned in the response.
+      operationId: DataAndJobHandling_StartExtraction
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StartExtractionRequest'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StartExtractionResponse'
+          description: OK
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+          description: Default error response
+      summary: Trigger extraction jobs
+      tags:
+      - DataAndJobHandling
+      x-konfig-operation-can-have-single-parameter: true
+      x-konfig-single-parameter-schema: konfig-generated-schema-single-parameter-schema-post--v1-op-data-startExtractAndLoad
+      x-content-type: application/json
+      x-accepts: application/json
+  /v1/op/data/startload:
+    post:
+      description: |-
+        This API starts the data load process for all analytic tenants included in the specified data files uploaded
+         to the Visier SFTP server. On success, you receive a job ID that can be filtered and searched for within the
+         Jobs room in Visier. This job ID is associated with the receiving job, and related to all processing jobs that
+         spawn for each analytic tenant.
+
+         With the job ID, you can also call the next two APIs to retrieve the status of the receiving job and the status
+         list of all related processing jobs.
+
+         **Prerequisite:** You must first obtain Visier's public encryption key and upload the source data files to Visier's
+         SFTP server. Files must have a .zip.gpg extension, meaning the files are encrypted using the PGP protocol and compressed.
+
+         Visier provides SFTP server credentials and instructions. You can find the encryption key at https://www.visier.com/pgp/visier.public.pgp.asc.
+         After downloading the file, open the file in a text editor or by dragging it into your browser.
+
+         **Note:**
+          - To see the full status of all analytic tenant data loads, navigate to the Jobs room in a project.
+          - For performance and efficiency, Visier requires that the uncompressed batch file size is below 5 GB and that no
+            more than 5000 tenants are included in a batch.
+      operationId: DataAndJobHandling_StartLoad
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DataLoadRequest'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataLoadResponse'
+          description: OK
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+          description: Default error response
+      summary: Start the data load for an analytic tenant
+      tags:
+      - DataAndJobHandling
+      x-konfig-operation-can-have-single-parameter: true
+      x-konfig-single-parameter-schema: konfig-generated-schema-single-parameter-schema-post--v1-op-data-startload
+      x-content-type: application/json
+      x-accepts: application/json
+  /v1/op/data/uploads:
+    get:
+      description: |-
+        Use this API to retrieve the data uploads and whether they're included in one of:
+         - A list of analytic tenants managed by you.
+         - A single specified analytic tenant.
+         - An upload job.
+      operationId: DataAndJobHandling_RetrieveDataUploads
+      parameters:
+      - description: The job ID of an upload job. Use this if you are interested in
+          the data uploads for a specific upload job.
+        explode: true
+        in: query
+        name: uploadJobId
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: The tenant code of a specific analytic tenant that you want to
+          retrieve the data uploads for.
+        explode: true
+        in: query
+        name: tenantCode
+        required: false
+        schema:
+          format: int32
+          type: integer
+        style: form
+      - description: The limit of analytic tenants to retrieve data uploads for. This
+          parameter is not used if the tenantCode parameter is specified.
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          format: int32
+          type: integer
+        style: form
+      - description: "The index to start retrieving results from, also known as offset.\
+          \ The index begins at 0."
+        explode: true
+        in: query
+        name: start
+        required: false
+        schema:
+          format: int32
+          type: integer
+        style: form
+      - description: The maximum number of latest enabled data uploads to retrieve
+          for each analytic tenant. The maximum value is 5.
+        explode: true
+        in: query
+        name: numberOfDataUploads
+        required: false
+        schema:
+          format: int32
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TenantDataUploadsListResponseDTO'
+          description: OK
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+          description: Default error response
+      summary: Retrieve data uploads
+      tags:
+      - DataAndJobHandling
+      x-konfig-operation-can-have-single-parameter: true
+      x-konfig-single-parameter-schema: konfig-generated-schema-single-parameter-schema-get--v1-op-data-uploads
+      x-accepts: application/json
+  /v1/op/data/uploads/exclude:
+    put:
+      description: Use this API to exclude either a specified list of data uploads
+        or all data uploads for each analytic tenant.
+      operationId: DataAndJobHandling_ExcludeDataUplaods
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExcludeDataUploadsRequest'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TenantDataUploadsUpdateResponseDTO'
+          description: OK
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+          description: Default error response
+      summary: Exclude data uploads
+      tags:
+      - DataAndJobHandling
+      x-konfig-operation-can-have-single-parameter: true
+      x-konfig-single-parameter-schema: konfig-generated-schema-single-parameter-schema-put--v1-op-data-uploads-exclude
+      x-content-type: application/json
+      x-accepts: application/json
+  /v1/op/data/uploads/include:
+    put:
+      description: Use this API to include either the specified list of data uploads
+        or all data uploads for each analytic tenant.
+      operationId: DataAndJobHandling_IncludeDataUploads
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IncludeDataUploadsRequest'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TenantDataUploadsUpdateResponseDTO'
+          description: OK
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+          description: Default error response
+      summary: Include data uploads
+      tags:
+      - DataAndJobHandling
+      x-konfig-operation-can-have-single-parameter: true
+      x-konfig-single-parameter-schema: konfig-generated-schema-single-parameter-schema-put--v1-op-data-uploads-include
+      x-content-type: application/json
+      x-accepts: application/json
+  /v1/op/job-status/jobs:
+    get:
+      description: Use this API to retrieve the list of statuses for all jobs.
+      operationId: DataAndJobHandling_JobStatus
+      parameters:
+      - description: The start time from which to retrieve job statuses.
+        explode: true
+        in: query
+        name: startTime
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: The end time from which to retrieve job statuses.
+        explode: true
+        in: query
+        name: endTime
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: The specific status to restrict the list of job to.
+        explode: true
+        in: query
+        name: status
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReceivingJobStatusResponse'
+          description: OK
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+          description: Default error response
+      summary: Retrieve the statuses of all jobs
+      tags:
+      - DataAndJobHandling
+      x-konfig-operation-can-have-single-parameter: true
+      x-konfig-single-parameter-schema: konfig-generated-schema-single-parameter-schema-get--v1-op-job-status-jobs
+      x-accepts: application/json
+  /v1/op/job-status/jobs/:jobId:
+    get:
+      description: Use this API to retrieve the list of statuses for a specific job
+        with id `jobId`.
+      operationId: DataAndJobHandling_JobIdStatus
+      parameters:
+      - description: The unique ID of the job to retrieve the status for.
+        explode: true
+        in: query
+        name: jobId
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReceivingJobStatusResponse'
+          description: OK
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+          description: Default error response
+      summary: Retrieve a specific job's status
+      tags:
+      - DataAndJobHandling
+      x-konfig-operation-can-have-single-parameter: true
+      x-konfig-single-parameter-schema: konfig-generated-schema-single-parameter-schema-get--v1-op-job-status-jobs-:jobId
+      x-accepts: application/json
+  /v1/op/jobs/cancel:
+    post:
+      description: |-
+        Use this API to cancel a list of processing jobs, upload jobs, receiving jobs, and extraction jobs.
+
+         Note: Receiving jobs with the Running status cannot be cancelled.
+      operationId: DataAndJobHandling_CancelJobs
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CancelJobBatchFromJobIdDTO'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobCancellationResultsDTO'
+          description: OK
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+          description: Default error response
+      summary: Cancel a list of jobs
+      tags:
+      - DataAndJobHandling
+      x-konfig-operation-can-have-single-parameter: true
+      x-konfig-single-parameter-schema: konfig-generated-schema-single-parameter-schema-post--v1-op-jobs-cancel
+      x-content-type: application/json
+      x-accepts: application/json
+  /v1/op/jobs/dispatching-jobs/:jobId:
+    get:
+      description: "Use this API to retrieve the status of a dispatching job, including\
+        \ its job ID and the number of jobs it generated."
+      operationId: DataAndJobHandling_DispatchingJobStatus
+      parameters:
+      - description: The ID of the job you want to retrieve.
+        explode: true
+        in: query
+        name: jobId
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DispatchingJobStatusResponse'
+          description: OK
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+          description: Default error response
+      summary: Retrieve a dispatching job's status
+      tags:
+      - DataAndJobHandling
+      x-konfig-operation-can-have-single-parameter: true
+      x-konfig-single-parameter-schema: konfig-generated-schema-single-parameter-schema-get--v1-op-jobs-dispatching-jobs-:jobId
+      x-accepts: application/json
+  /v1/op/jobs/dispatching-jobs/:jobId/extraction-jobs:
+    get:
+      description: |-
+        Use this API to retrieve the statuses of extraction jobs associated with a dispatching job. The dispatching job
+         is a "parent" to extraction jobs, which retrieve data from your source systems through data connectors.
+      operationId: DataAndJobHandling_ExtractionJobAndStatus
+      parameters:
+      - description: The ID of the dispatching job that generated the extraction jobs.
+        explode: true
+        in: query
+        name: dispatchingJobId
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: |-
+          The tenant code of a specific analytic tenant that you want to retrieve the extraction job status for.
+           Use this if you are only interested in the results for one analytic tenant.
+        explode: true
+        in: query
+        name: tenantCode
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: The limit of extraction job statuses to retrieve.
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          format: int32
+          type: integer
+        style: form
+      - description: "The index to start retrieving results from, also known as offset.\
+          \ The index begins at 0."
+        explode: true
+        in: query
+        name: start
+        required: false
+        schema:
+          format: int32
+          type: integer
+        style: form
+      - description: The ID of the dispatching job you want to retrieve.
+        explode: true
+        in: query
+        name: jobId
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExtractionJobAndStatusResponse'
+          description: OK
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+          description: Default error response
+      summary: Retrieve a dispatching job's extraction jobs with their statuses
+      tags:
+      - DataAndJobHandling
+      x-konfig-operation-can-have-single-parameter: true
+      x-konfig-single-parameter-schema: konfig-generated-schema-single-parameter-schema-get--v1-op-jobs-dispatching-jobs-:jobId-extraction-jobs
+      x-accepts: application/json
+  /v1/op/jobs/dispatching-jobs/:jobId/processing-jobs:
+    get:
+      description: |-
+        Use this API to retrieve the statuses of processing jobs associated with a dispatching job. The dispatching job
+         is a "parent" to extraction jobs, which in turn generate processing jobs and receiving jobs.
+      operationId: DataAndJobHandling_ProcessingJobAndStatus
+      parameters:
+      - description: The ID of the dispatching job that generated the extraction jobs.
+        explode: true
+        in: query
+        name: dispatchingJobId
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: |-
+          The tenant code of a specific analytic tenant that you want to retrieve the extraction job status for.
+           Use this if you are only interested in the results for one analytic tenant.
+        explode: true
+        in: query
+        name: tenantCode
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: The limit of extraction job statuses to retrieve.
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          format: int32
+          type: integer
+        style: form
+      - description: "The index to start retrieving results from, also known as offset.\
+          \ The index begins at 0."
+        explode: true
+        in: query
+        name: start
+        required: false
+        schema:
+          format: int32
+          type: integer
+        style: form
+      - description: The ID of the dispatching job you want to retrieve.
+        explode: true
+        in: query
+        name: jobId
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProcessingJobAndStatusResponse'
+          description: OK
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+          description: Default error response
+      summary: Retrieve a dispatching job's processing jobs with their statuses
+      tags:
+      - DataAndJobHandling
+      x-konfig-operation-can-have-single-parameter: true
+      x-konfig-single-parameter-schema: konfig-generated-schema-single-parameter-schema-get--v1-op-jobs-dispatching-jobs-:jobId-processing-jobs
+      x-accepts: application/json
+  /v1/op/jobs/dispatching-jobs/:jobId/receiving-jobs:
+    get:
+      description: |-
+        Use this API to retrieve the statuses of receiving jobs associated with a dispatching job. The dispatching job
+         is a "parent" to extraction jobs, which in turn generate processing jobs and receiving jobs.
+      operationId: DataAndJobHandling_ReceivingJobAndStatus
+      parameters:
+      - description: The ID of the dispatching job that generated the extraction jobs.
+        explode: true
+        in: query
+        name: dispatchingJobId
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: |-
+          The tenant code of a specific analytic tenant that you want to retrieve the extraction job status for.
+           Use this if you are only interested in the results for one analytic tenant.
+        explode: true
+        in: query
+        name: tenantCode
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: The limit of extraction job statuses to retrieve.
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          format: int32
+          type: integer
+        style: form
+      - description: "The index to start retrieving results from, also known as offset.\
+          \ The index begins at 0."
+        explode: true
+        in: query
+        name: start
+        required: false
+        schema:
+          format: int32
+          type: integer
+        style: form
+      - description: The ID of the dispatching job you want to retrieve.
+        explode: true
+        in: query
+        name: jobId
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReceivingJobAndStatusResponse'
+          description: OK
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+          description: Default error response
+      summary: Retrieve a dispatching job's receiving jobs with their statuses
+      tags:
+      - DataAndJobHandling
+      x-konfig-operation-can-have-single-parameter: true
+      x-konfig-single-parameter-schema: konfig-generated-schema-single-parameter-schema-get--v1-op-jobs-dispatching-jobs-:jobId-receiving-jobs
+      x-accepts: application/json
+  /v1/op/jobs/receiving-jobs/:receivingJobId:
+    get:
+      description: |-
+        After sending data to Visier, you may want to know the status of the receiving job and the associated tenant
+         receiving jobs. A receiving job validates the transferred data and adds the transferred data to Visier's data
+         store.
+
+         Use this API to retrieve the receiving job status and summary of analytic tenant receiving jobs.
+      operationId: DataAndJobHandling_ReceivingJobStatus
+      parameters:
+      - description: "If \"true\", returns the status of receiving jobs spawned by\
+          \ the receiving job specified by jobId."
+        explode: true
+        in: query
+        name: jobs
+        required: false
+        schema:
+          type: boolean
+        style: form
+      - description: |-
+          The tenant code of the tenant you want to retrieve the receiving jobs for. Use this if you are only interested
+           in the results for one analytic tenant.
+        explode: true
+        in: query
+        name: tenantCode
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: "The index to start retrieving results from, also known as offset.\
+          \ The index begins at 0."
+        explode: true
+        in: query
+        name: start
+        required: false
+        schema:
+          format: int32
+          type: integer
+        style: form
+      - description: The number of job statuses to return per page.
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          format: int32
+          type: integer
+        style: form
+      - description: The jobId provided after sending data to Visier.
+        explode: true
+        in: query
+        name: receivingJobId
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReceivingJobStatusResponse'
+          description: OK
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+          description: Default error response
+      summary: Retrieve a receiving job's status
+      tags:
+      - DataAndJobHandling
+      x-konfig-operation-can-have-single-parameter: true
+      x-konfig-single-parameter-schema: konfig-generated-schema-single-parameter-schema-get--v1-op-jobs-receiving-jobs-:receivingJobId
+      x-accepts: application/json
+  v1/op/data-versions:
+    get:
+      description: |-
+        If you discover any inconsistencies after running metric value validation, you may want to find the data versions
+         causing inconsistencies so you can later disable them.
+
+         Use this API to retrieve up to five (5) of the latest enabled data versions for all your analytic tenants or a
+         single specified analytic tenant.
+      operationId: DataAndJobHandling_LatestEnabledDV
+      parameters:
+      - description: |-
+          The tenant code of a specific analytic tenant that you want to retrieve data versions for.
+           Use this if you are only interested in the results for one analytic tenant.
+        explode: true
+        in: query
+        name: tenantCode
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: |-
+          The limit of analytic tenants to retrieve data versions for.
+           This parameter is not used if the tenantCode parameter is specified.
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          format: int32
+          type: integer
+        style: form
+      - description: "The index to start retrieving results from, also known as offset.\
+          \ The index begins at 0."
+        explode: true
+        in: query
+        name: start
+        required: false
+        schema:
+          format: int32
+          type: integer
+        style: form
+      - description: The number of latest enabled data versions to retrieve. The maximum
+          value is 5.
+        explode: true
+        in: query
+        name: numberOfVersions
+        required: false
+        schema:
+          format: int32
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MultipleTenantDataVersionsListDTO'
+          description: OK
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+          description: Default error response
+      summary: Retrieve the latest enabled data versions for all analytic tenants
+      tags:
+      - DataAndJobHandling
+      x-konfig-operation-can-have-single-parameter: true
+      x-konfig-single-parameter-schema: konfig-generated-schema-single-parameter-schema-get-v1-op-data-versions
+      x-accepts: application/json
+  v1/op/jobs/processing-jobs/:receivingJobId:
+    get:
+      description: |-
+        Use this API to retrieve a list of statuses for all processing jobs associated with the given receiving job ID.
+         Processing jobs deal with an individual analytic tenant's data load. A processing job is either triggered through
+         the UI or is one of many processing jobs spawned from a receiving job. When a processing job is triggered as part
+         of a set from an receiving job, it is associated to the receiving job through a Parent ID.
+      operationId: DataAndJobHandling_ProcessingJobStatus
+      parameters:
+      - description: |-
+          The tenant code of the tenant you want to retrieve the processing jobs for.
+           Use this if you are only interested in the results for one analytic tenant.
+        explode: true
+        in: query
+        name: tenantCode
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: The limit of processing jobs to retrieve per page.
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          format: int32
+          type: integer
+        style: form
+      - description: "The index to start retrieving results from, also known as offset.\
+          \ The index begins at 0."
+        explode: true
+        in: query
+        name: start
+        required: false
+        schema:
+          format: int32
+          type: integer
+        style: form
+      - description: The receiving job ID
+        explode: true
+        in: query
+        name: receivingJobId
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProcessingJobStatusResponse'
+          description: OK
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+          description: Default error response
+      summary: Retrieve processing job statuses by receiving job ID
+      tags:
+      - DataAndJobHandling
+      x-konfig-operation-can-have-single-parameter: true
+      x-konfig-single-parameter-schema: konfig-generated-schema-single-parameter-schema-get-v1-op-jobs-processing-jobs-:receivingJobId
+      x-accepts: application/json
+  /v1/op/data-connector-credentials/:id:
+    delete:
+      description: |-
+        Use this API to delete connector credentials from your tenants. Credentials that are no longer valid
+         should be deleted.
+      operationId: DataAndJobHandling_DeleteConnectorCredential
+      parameters:
+      - description: The credentialId of the credential you want to delete.
+        explode: true
+        in: query
+        name: id
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: The tenant code of the analytic tenant in which the credential
+          you're deleting.
+        explode: true
+        in: query
+        name: tenantCode
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataAndJobHandlingDeleteConnectorCredentialResponse'
+          description: OK
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+          description: Default error response
+      summary: Delete a connector credential
+      tags:
+      - DataAndJobHandling
+      x-konfig-operation-can-have-single-parameter: true
+      x-konfig-single-parameter-schema: konfig-generated-schema-single-parameter-schema-delete--v1-op-data-connector-credentials-:id
+      x-accepts: application/json
+components:
+  schemas:
+    AdpAuthParamsDTO:
+      example:
+        authCode: authCode
+      properties:
+        authCode:
+          type: string
+      type: object
+    AssignConnectorCredentialRequest:
+      example:
+        connectors:
+        - tenants:
+          - credentialId: credentialId
+            tenantCode: tenantCode
+          - credentialId: credentialId
+            tenantCode: tenantCode
+          connectorId: connectorId
+        - tenants:
+          - credentialId: credentialId
+            tenantCode: tenantCode
+          - credentialId: credentialId
+            tenantCode: tenantCode
+          connectorId: connectorId
+      properties:
+        connectors:
+          description: A list of objects representing the data connectors to be assigned
+            with credentials.
+          items:
+            $ref: '#/components/schemas/Connector'
+          type: array
+      type: object
+    AssignConnectorCredentialsByTenantResponseDTO:
+      example:
+        connectors:
+        - connector:
+            connectorId: connectorId
+            displayName: displayName
+            description: description
+          credential:
+            displayName: displayName
+            credentialId: credentialId
+            message: message
+        - connector:
+            connectorId: connectorId
+            displayName: displayName
+            description: description
+          credential:
+            displayName: displayName
+            credentialId: credentialId
+            message: message
+        tenantCode: tenantCode
+        message: message
+        status: Unknown
+      properties:
+        tenantCode:
+          description: The unique identifier associated with the tenant.
+          type: string
+        connectors:
+          description: A list of objects representing the assigned credentials and
+            connectors.
+          items:
+            $ref: '#/components/schemas/AssignConnectorWithCredentialsResponseDTO'
+          type: array
+        status:
+          description: The state of the credential assignment. Valid values are Succeed
+            or Failed.
+          enum:
+          - Unknown
+          - Succeed
+          - Failed
+          format: enum
+          type: string
+        message:
+          type: string
+      type: object
+    AssignConnectorCredentialsResponseDTO:
+      example:
+        tenants:
+        - connectors:
+          - connector:
+              connectorId: connectorId
+              displayName: displayName
+              description: description
+            credential:
+              displayName: displayName
+              credentialId: credentialId
+              message: message
+          - connector:
+              connectorId: connectorId
+              displayName: displayName
+              description: description
+            credential:
+              displayName: displayName
+              credentialId: credentialId
+              message: message
+          tenantCode: tenantCode
+          message: message
+          status: Unknown
+        - connectors:
+          - connector:
+              connectorId: connectorId
+              displayName: displayName
+              description: description
+            credential:
+              displayName: displayName
+              credentialId: credentialId
+              message: message
+          - connector:
+              connectorId: connectorId
+              displayName: displayName
+              description: description
+            credential:
+              displayName: displayName
+              credentialId: credentialId
+              message: message
+          tenantCode: tenantCode
+          message: message
+          status: Unknown
+      properties:
+        tenants:
+          description: A list of objects representing the tenants and data connectors
+            that were assigned connector credentials.
+          items:
+            $ref: '#/components/schemas/AssignConnectorCredentialsByTenantResponseDTO'
+          type: array
+      type: object
+      x-konfig-is-used-in-successful-response: true
+    AssignConnectorWithCredentialsResponseDTO:
+      example:
+        connector:
+          connectorId: connectorId
+          displayName: displayName
+          description: description
+        credential:
+          displayName: displayName
+          credentialId: credentialId
+          message: message
+      properties:
+        connector:
+          $ref: '#/components/schemas/ConnectorInfoResponseDTO'
+        credential:
+          $ref: '#/components/schemas/AssignedCredentialInfoResponseDTO'
+      type: object
+      x-konfig-properties:
+        connector:
+          description: The data connector that was assigned a connector credential.
+        credential:
+          description: A connector credential that was assigned to a data connector
+    AssignedCredentialInfoResponseDTO:
+      example:
+        displayName: displayName
+        credentialId: credentialId
+        message: message
+      properties:
+        credentialId:
+          description: The unique identifier associated with the user.
+          type: string
+        displayName:
+          description: "The user's username. This is typically the user's email, such\
+            \ as john@visier.com."
+          type: string
+        message:
+          type: string
+      type: object
+    BambooAuthParamsDTO:
+      example:
+        accessKey: accessKey
+        tenantDomainName: tenantDomainName
+      properties:
+        accessKey:
+          type: string
+        tenantDomainName:
+          type: string
+      type: object
+    BasicS3AuthParamsDTO:
+      example:
+        bucketRegion: bucketRegion
+        bucketName: bucketName
+        path: path
+        secretKey: secretKey
+        accessKey: accessKey
+      properties:
+        bucketName:
+          type: string
+        bucketRegion:
+          type: string
+        accessKey:
+          type: string
+        secretKey:
+          type: string
+        path:
+          type: string
+      type: object
+    BigQueryAuthParamsDTO:
+      example:
+        datasetLocation: datasetLocation
+        clientId: clientId
+        serviceAccountParams:
+          serviceAccountEmail: serviceAccountEmail
+          privateKey: privateKey
+        clientSecret: clientSecret
+        projectId: projectId
+        defaultDataset: defaultDataset
+        refreshToken: refreshToken
+      properties:
+        projectId:
+          type: string
+        datasetLocation:
+          type: string
+        refreshToken:
+          type: string
+        clientId:
+          type: string
+        clientSecret:
+          type: string
+        defaultDataset:
+          type: string
+        serviceAccountParams:
+          $ref: '#/components/schemas/BigQueryServiceAccountParamsDTO'
+      type: object
+    BigQueryServiceAccountParamsDTO:
+      example:
+        serviceAccountEmail: serviceAccountEmail
+        privateKey: privateKey
+      properties:
+        serviceAccountEmail:
+          type: string
+        privateKey:
+          type: string
+      type: object
+    CancelJobBatchFromJobIdDTO:
+      example:
+        jobIds:
+        - jobIds
+        - jobIds
+      properties:
+        jobIds:
+          description: A list of jobs to cancel. The maximum number of jobs that can
+            be cancelled is 500.
+          items:
+            type: string
+          type: array
+      type: object
+    Connector:
+      example:
+        tenants:
+        - credentialId: credentialId
+          tenantCode: tenantCode
+        - credentialId: credentialId
+          tenantCode: tenantCode
+        connectorId: connectorId
+      properties:
+        connectorId:
+          description: The unique identifier associated with the data connector.
+          type: string
+        tenants:
+          description: A list of analytic tenants and credentials to be assigned to
+            the connector.
+          items:
+            $ref: '#/components/schemas/TenantAndCredential'
+          type: array
+      type: object
+    ConnectorInfoResponseDTO:
+      example:
+        connectorId: connectorId
+        displayName: displayName
+        description: description
+      properties:
+        description:
+          type: string
+        connectorId:
+          description: The unique identifier associated with the data connector.
+          type: string
+        displayName:
+          description: An identifiable data connector name that is displayed within
+            Visier.
+          type: string
+      type: object
+    CopyS3AuthParamsDTO:
+      example:
+        iamRole: iamRole
+      properties:
+        iamRole:
+          type: string
+      type: object
+    CredentialCreationAPIResponseDTO:
+      example:
+        objectName: objectName
+        symbolName: symbolName
+        missingConnectionProperties:
+        - subject: Employee
+          attributes:
+          - attributes
+          - attributes
+        - subject: Employee
+          attributes:
+          - attributes
+          - attributes
+        uuid: uuid
+      properties:
+        uuid:
+          description: The unique ID of the newly created credential.
+          type: string
+        symbolName:
+          description: The symbol name of the newly created credential.
+          type: string
+        objectName:
+          description: The object name of the newly created credential.
+          type: string
+        missingConnectionProperties:
+          description: |-
+            The properties that the credential cannot access despite successful authentication.
+             This is only returned for authentications that do not grant access to all data.
+          items:
+            $ref: '#/components/schemas/SubjectMissingAccessDTO'
+          type: array
+      type: object
+      x-konfig-is-used-in-successful-response: true
+    DataLoadRequest:
+      example:
+        model:
+          key:
+            value:
+            - value
+            - value
+      properties:
+        model:
+          additionalProperties:
+            $ref: '#/components/schemas/MapValue'
+          description: |-
+            A form body key that contains a collection of key-value pairs.
+
+             **Note:** The only supported key value is `files` and the value is a comma-separated list of file names.
+             Example:
+             `"files": "/path/to/file1.zip.gpg,/path/to/another/file.zip.gpg"`
+          type: object
+      type: object
+    DataLoadResponse:
+      example:
+        jobId: jobId
+      properties:
+        jobId:
+          description: The unique identifier associated with the receiving job.
+          type: string
+      type: object
+      x-konfig-is-used-in-successful-response: true
+    DataProviderAuthInformationDTO:
+      example:
+        dataProviderMetadata:
+          canChildrenInherit: true
+        dataProviderAuthParams:
+          googleWorkspaceAuthParams:
+            authCode: authCode
+            clientId: clientId
+            clientSecret: clientSecret
+          successFactorsAuthParams:
+            companyID: companyID
+            password: password
+            hostDomainName: hostDomainName
+            username: username
+          authContext: DefaultDataExtraction
+          tenantDomainName: tenantDomainName
+          leverAuthParams:
+            apiKey: apiKey
+          sqlServerAuthParams:
+            password: password
+            database: database
+            port: port
+            host: host
+            username: username
+          emptyAuthParams: "{}"
+          namelyAuthParams:
+            authCode: authCode
+          icimsAuthParams:
+            password: password
+            customerId: customerId
+            username: username
+          salesforceAuthParams:
+            clientId: clientId
+            refreshToken: refreshToken
+          copyS3AuthParams:
+            iamRole: iamRole
+          provider: Bamboo
+          workdayAuthParams:
+            password: password
+            implementationName: implementationName
+            apiKey: apiKey
+            domainName: domainName
+            integrationSystemId: integrationSystemId
+            userId: userId
+          snowflakeAuthParams:
+            schema: schema
+            privateKey: privateKey
+            database: database
+            password: password
+            accountIdentifier: accountIdentifier
+            warehouse: warehouse
+            username: username
+          oracleDbAuthParams:
+            password: password
+            port: port
+            host: host
+            serviceName: serviceName
+            username: username
+          internalS3AuthParams:
+            bucketName: bucketName
+            path: path
+          mySqlAuthParams:
+            password: password
+            database: database
+            port: port
+            host: host
+            username: username
+            sslMode: sslMode
+          dayforceV2AuthParams:
+            password: password
+            companyId: companyId
+            hostDomainName: hostDomainName
+            tokenHost: tokenHost
+            username: username
+          serviceNowAuthParams:
+            password: password
+            hostDomainName: hostDomainName
+            username: username
+          slackAuthParams:
+            authCode: authCode
+            clientId: clientId
+            clientSecret: clientSecret
+          dimensionsAuthParams:
+            password: password
+            clientId: clientId
+            vanityUrl: vanityUrl
+            appKey: appKey
+            clientSecret: clientSecret
+            username: username
+          workdayRaasAuthParams:
+            password: password
+            testReportUrl: testReportUrl
+            implementationName: implementationName
+            domainName: domainName
+            userId: userId
+          s3AuthParams:
+            bucketRegion: bucketRegion
+            bucketName: bucketName
+            path: path
+            secretKey: secretKey
+            accessKey: accessKey
+          bigQueryAuthParams:
+            datasetLocation: datasetLocation
+            clientId: clientId
+            serviceAccountParams:
+              serviceAccountEmail: serviceAccountEmail
+              privateKey: privateKey
+            clientSecret: clientSecret
+            projectId: projectId
+            defaultDataset: defaultDataset
+            refreshToken: refreshToken
+          salesforceV2AuthParams:
+            loginHost: loginHost
+            authCode: authCode
+            clientId: clientId
+            clientSecret: clientSecret
+          greenhouseAuthParams:
+            apiKey: apiKey
+          googleSheetsAuthParams:
+            authCode: authCode
+            clientId: clientId
+            configuration: configuration
+            clientSecret: clientSecret
+          jdbcAuthParams:
+            password: password
+            jdbcConnectString: jdbcConnectString
+            username: username
+          qualtricsAuthParams:
+            apiToken: apiToken
+            dataCenterId: dataCenterId
+          bambooAuthParams:
+            accessKey: accessKey
+            tenantDomainName: tenantDomainName
+          redshiftAuthParams:
+            schema: schema
+            endpoint: endpoint
+            database: database
+            password: password
+            port: port
+            tablePrefix: tablePrefix
+            username: username
+          willowAuthParams:
+            hostName: hostName
+            apiToken: apiToken
+          fusionAuthParams:
+            password: password
+            hostDomainName: hostDomainName
+            username: username
+          medalliaAuthParams:
+            clientId: clientId
+            tenantDomainName: tenantDomainName
+            clientSecret: clientSecret
+            instanceUrl: instanceUrl
+          zoomAuthParams:
+            authCode: authCode
+            clientId: clientId
+            clientSecret: clientSecret
+          ultimateAuthParams:
+            password: password
+            apiKey: apiKey
+            hostDomainName: hostDomainName
+            username: username
+            userAccessKey: userAccessKey
+          hasUpdates: true
+          ms365AuthParams:
+            oAuthTenantId: oAuthTenantId
+            clientId: clientId
+            clientSecret: clientSecret
+          adpAuthParams:
+            authCode: authCode
+          gongAuthParams:
+            clientId: clientId
+            clientSecret: clientSecret
+          jiraAuthParams:
+            hostName: hostName
+            apiToken: apiToken
+            connectParams:
+              clientKey: clientKey
+              appKey: appKey
+              sharedSecret: sharedSecret
+        dataProviderBasicInformation:
+          displayName: displayName
+          description: description
+      properties:
+        dataProviderAuthParams:
+          $ref: '#/components/schemas/DataProviderAuthParamsDTO'
+        dataProviderBasicInformation:
+          $ref: '#/components/schemas/DataProviderBasicInformationDTO'
+        dataProviderMetadata:
+          $ref: '#/components/schemas/DataProviderBasicMetadataDTO'
+      type: object
+      x-konfig-properties:
+        dataProviderAuthParams:
+          description: The authentication information for the credential.
+        dataProviderBasicInformation:
+          description: The display name and description for the credential.
+    DataProviderAuthParamsDTO:
+      example:
+        googleWorkspaceAuthParams:
+          authCode: authCode
+          clientId: clientId
+          clientSecret: clientSecret
+        successFactorsAuthParams:
+          companyID: companyID
+          password: password
+          hostDomainName: hostDomainName
+          username: username
+        authContext: DefaultDataExtraction
+        tenantDomainName: tenantDomainName
+        leverAuthParams:
+          apiKey: apiKey
+        sqlServerAuthParams:
+          password: password
+          database: database
+          port: port
+          host: host
+          username: username
+        emptyAuthParams: "{}"
+        namelyAuthParams:
+          authCode: authCode
+        icimsAuthParams:
+          password: password
+          customerId: customerId
+          username: username
+        salesforceAuthParams:
+          clientId: clientId
+          refreshToken: refreshToken
+        copyS3AuthParams:
+          iamRole: iamRole
+        provider: Bamboo
+        workdayAuthParams:
+          password: password
+          implementationName: implementationName
+          apiKey: apiKey
+          domainName: domainName
+          integrationSystemId: integrationSystemId
+          userId: userId
+        snowflakeAuthParams:
+          schema: schema
+          privateKey: privateKey
+          database: database
+          password: password
+          accountIdentifier: accountIdentifier
+          warehouse: warehouse
+          username: username
+        oracleDbAuthParams:
+          password: password
+          port: port
+          host: host
+          serviceName: serviceName
+          username: username
+        internalS3AuthParams:
+          bucketName: bucketName
+          path: path
+        mySqlAuthParams:
+          password: password
+          database: database
+          port: port
+          host: host
+          username: username
+          sslMode: sslMode
+        dayforceV2AuthParams:
+          password: password
+          companyId: companyId
+          hostDomainName: hostDomainName
+          tokenHost: tokenHost
+          username: username
+        serviceNowAuthParams:
+          password: password
+          hostDomainName: hostDomainName
+          username: username
+        slackAuthParams:
+          authCode: authCode
+          clientId: clientId
+          clientSecret: clientSecret
+        dimensionsAuthParams:
+          password: password
+          clientId: clientId
+          vanityUrl: vanityUrl
+          appKey: appKey
+          clientSecret: clientSecret
+          username: username
+        workdayRaasAuthParams:
+          password: password
+          testReportUrl: testReportUrl
+          implementationName: implementationName
+          domainName: domainName
+          userId: userId
+        s3AuthParams:
+          bucketRegion: bucketRegion
+          bucketName: bucketName
+          path: path
+          secretKey: secretKey
+          accessKey: accessKey
+        bigQueryAuthParams:
+          datasetLocation: datasetLocation
+          clientId: clientId
+          serviceAccountParams:
+            serviceAccountEmail: serviceAccountEmail
+            privateKey: privateKey
+          clientSecret: clientSecret
+          projectId: projectId
+          defaultDataset: defaultDataset
+          refreshToken: refreshToken
+        salesforceV2AuthParams:
+          loginHost: loginHost
+          authCode: authCode
+          clientId: clientId
+          clientSecret: clientSecret
+        greenhouseAuthParams:
+          apiKey: apiKey
+        googleSheetsAuthParams:
+          authCode: authCode
+          clientId: clientId
+          configuration: configuration
+          clientSecret: clientSecret
+        jdbcAuthParams:
+          password: password
+          jdbcConnectString: jdbcConnectString
+          username: username
+        qualtricsAuthParams:
+          apiToken: apiToken
+          dataCenterId: dataCenterId
+        bambooAuthParams:
+          accessKey: accessKey
+          tenantDomainName: tenantDomainName
+        redshiftAuthParams:
+          schema: schema
+          endpoint: endpoint
+          database: database
+          password: password
+          port: port
+          tablePrefix: tablePrefix
+          username: username
+        willowAuthParams:
+          hostName: hostName
+          apiToken: apiToken
+        fusionAuthParams:
+          password: password
+          hostDomainName: hostDomainName
+          username: username
+        medalliaAuthParams:
+          clientId: clientId
+          tenantDomainName: tenantDomainName
+          clientSecret: clientSecret
+          instanceUrl: instanceUrl
+        zoomAuthParams:
+          authCode: authCode
+          clientId: clientId
+          clientSecret: clientSecret
+        ultimateAuthParams:
+          password: password
+          apiKey: apiKey
+          hostDomainName: hostDomainName
+          username: username
+          userAccessKey: userAccessKey
+        hasUpdates: true
+        ms365AuthParams:
+          oAuthTenantId: oAuthTenantId
+          clientId: clientId
+          clientSecret: clientSecret
+        adpAuthParams:
+          authCode: authCode
+        gongAuthParams:
+          clientId: clientId
+          clientSecret: clientSecret
+        jiraAuthParams:
+          hostName: hostName
+          apiToken: apiToken
+          connectParams:
+            clientKey: clientKey
+            appKey: appKey
+            sharedSecret: sharedSecret
+      properties:
+        tenantDomainName:
+          type: string
+        provider:
+          description: |-
+            The data provider associated with the credential.
+             - Valid values: UKG, Dimensions, Workday, Redshift, BasicS3, CopyS3, SqlServer, Snowflake
+          enum:
+          - Bamboo
+          - GoogleSheets
+          - Greenhouse
+          - Jira
+          - Lever
+          - Namely
+          - Qualtrics
+          - Salesforce
+          - UKG
+          - Workday
+          - Icims
+          - ServiceNow
+          - Jdbc
+          - BasicS3
+          - InternalS3
+          - CopyS3
+          - Redshift
+          - Snowflake
+          - BigQuery
+          - SqlServer
+          - Dimensions
+          - IcimsPartnerProviderRedshift
+          - Willow
+          - SuccessFactors
+          - IcimsV2
+          - ADP
+          - WorkdayV2
+          - ServiceNowV2
+          - Medallia
+          - Fusion
+          - SalesforceV2
+          - Gong
+          - Zoom
+          - GoogleCalendar
+          - UKGV2
+          - DayforceV2
+          - GoogleActivityReport
+          - Slack
+          - MySql
+          - WorkdayRaas
+          - Microsoft365
+          - GoogleWorkspace
+          - OracleDb
+          - SmartRecruiters
+          format: enum
+          type: string
+        bambooAuthParams:
+          $ref: '#/components/schemas/BambooAuthParamsDTO'
+        greenhouseAuthParams:
+          $ref: '#/components/schemas/GreenhouseAuthParamsDTO'
+        googleSheetsAuthParams:
+          $ref: '#/components/schemas/GoogleSheetsAuthParamsDTO'
+        jiraAuthParams:
+          $ref: '#/components/schemas/JiraAuthParamsDTO'
+        leverAuthParams:
+          $ref: '#/components/schemas/LeverAuthParamsDTO'
+        namelyAuthParams:
+          $ref: '#/components/schemas/NamelyAuthParamsDTO'
+        qualtricsAuthParams:
+          $ref: '#/components/schemas/QualtricsAuthParamsDTO'
+        salesforceAuthParams:
+          $ref: '#/components/schemas/SalesforceAuthParamsDTO'
+        ultimateAuthParams:
+          $ref: '#/components/schemas/UltimateAuthParamsDTO'
+        workdayAuthParams:
+          $ref: '#/components/schemas/WorkdayAuthParamsDTO'
+        icimsAuthParams:
+          $ref: '#/components/schemas/IcimsAuthParamsDTO'
+        serviceNowAuthParams:
+          $ref: '#/components/schemas/ServiceNowAuthParamsDTO'
+        jdbcAuthParams:
+          $ref: '#/components/schemas/JdbcAuthParamsDTO'
+        s3AuthParams:
+          $ref: '#/components/schemas/BasicS3AuthParamsDTO'
+        internalS3AuthParams:
+          $ref: '#/components/schemas/InternalS3AuthParamsDTO'
+        copyS3AuthParams:
+          $ref: '#/components/schemas/CopyS3AuthParamsDTO'
+        redshiftAuthParams:
+          $ref: '#/components/schemas/RedshiftAuthParamsDTO'
+        snowflakeAuthParams:
+          $ref: '#/components/schemas/SnowflakeAuthParamsDTO'
+        bigQueryAuthParams:
+          $ref: '#/components/schemas/BigQueryAuthParamsDTO'
+        sqlServerAuthParams:
+          $ref: '#/components/schemas/SqlServerAuthParamsDTO'
+        dimensionsAuthParams:
+          $ref: '#/components/schemas/DimensionsAuthParamsDTO'
+        willowAuthParams:
+          $ref: '#/components/schemas/WillowAuthParamsDTO'
+        emptyAuthParams:
+          properties: {}
+          type: object
+        successFactorsAuthParams:
+          $ref: '#/components/schemas/SuccessFactorsAuthParamsDTO'
+        fusionAuthParams:
+          $ref: '#/components/schemas/FusionAuthParamsDTO'
+        adpAuthParams:
+          $ref: '#/components/schemas/AdpAuthParamsDTO'
+        medalliaAuthParams:
+          $ref: '#/components/schemas/MedalliaAuthParamsDTO'
+        salesforceV2AuthParams:
+          $ref: '#/components/schemas/SalesforceV2AuthParamsDTO'
+        gongAuthParams:
+          $ref: '#/components/schemas/GongAuthParamsDTO'
+        zoomAuthParams:
+          $ref: '#/components/schemas/ZoomAuthParamsDTO'
+        dayforceV2AuthParams:
+          $ref: '#/components/schemas/DayforceV2AuthParamsDTO'
+        slackAuthParams:
+          $ref: '#/components/schemas/SlackAuthParamsDTO'
+        mySqlAuthParams:
+          $ref: '#/components/schemas/MySqlAuthParamsDTO'
+        workdayRaasAuthParams:
+          $ref: '#/components/schemas/WorkdayRaasAuthParamsDTO'
+        ms365AuthParams:
+          $ref: '#/components/schemas/Microsoft365AuthParamsDTO'
+        googleWorkspaceAuthParams:
+          $ref: '#/components/schemas/GoogleWorkspaceAuthParamsDTO'
+        oracleDbAuthParams:
+          $ref: '#/components/schemas/OracleDbAuthParamsDTO'
+        hasUpdates:
+          type: boolean
+        authContext:
+          enum:
+          - DefaultDataExtraction
+          - WorkplaceDynamicsDataExtraction
+          - Notification
+          format: enum
+          type: string
+      type: object
+    DataProviderBasicInformationDTO:
+      example:
+        displayName: displayName
+        description: description
+      properties:
+        description:
+          type: string
+        displayName:
+          type: string
+      type: object
+    DataProviderBasicMetadataDTO:
+      example:
+        canChildrenInherit: true
+      properties:
+        canChildrenInherit:
+          type: boolean
+      type: object
+    DataVersionAndDateDTO:
+      example:
+        dataVersion: dataVersion
+        dataVersionDate: dataVersionDate
+      properties:
+        dataVersion:
+          description: The data version ID.
+          type: string
+        dataVersionDate:
+          description: The date that the data version was created.
+          type: string
+      type: object
+    DataVersionObject:
+      example:
+        tenantCode: tenantCode
+        dataVersions: dataVersions
+      properties:
+        tenantCode:
+          description: The tenant code for the analytic tenant that you are disabling
+            a data version.
+          type: string
+        dataVersions:
+          description: The data version to disable for a particular analytic tenant.
+          type: string
+      type: object
+    DayforceV2AuthParamsDTO:
+      example:
+        password: password
+        companyId: companyId
+        hostDomainName: hostDomainName
+        tokenHost: tokenHost
+        username: username
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+        companyId:
+          type: string
+        tokenHost:
+          type: string
+        hostDomainName:
+          type: string
+      type: object
+    DimensionsAuthParamsDTO:
+      example:
+        password: password
+        clientId: clientId
+        vanityUrl: vanityUrl
+        appKey: appKey
+        clientSecret: clientSecret
+        username: username
+      properties:
+        appKey:
+          type: string
+        clientId:
+          type: string
+        clientSecret:
+          type: string
+        vanityUrl:
+          type: string
+        username:
+          type: string
+        password:
+          type: string
+      type: object
+    DisableDVModel:
+      example:
+        dataVersionObjects:
+        - tenantCode: tenantCode
+          dataVersions: dataVersions
+        - tenantCode: tenantCode
+          dataVersions: dataVersions
+      properties:
+        dataVersionObjects:
+          description: |-
+            A list of objects representing the data version to disable for a particular analytic tenant.
+             The limit of objects to include per request is 1000.
+          items:
+            $ref: '#/components/schemas/DataVersionObject'
+          type: array
+      type: object
+    DisableDVRequest:
+      example:
+        model:
+          dataVersionObjects:
+          - tenantCode: tenantCode
+            dataVersions: dataVersions
+          - tenantCode: tenantCode
+            dataVersions: dataVersions
+      properties:
+        model:
+          $ref: '#/components/schemas/DisableDVModel'
+      type: object
+      x-konfig-properties:
+        model:
+          description: A form body key that contains a collection of key-value pairs.
+    DisableDVResponse:
+      example:
+        totalFailures: 0
+        totalSuccess: 6
+        results:
+        - jobId: jobId
+          dataVersion: dataVersion
+          tenantCode: tenantCode
+          message: message
+          status: status
+        - jobId: jobId
+          dataVersion: dataVersion
+          tenantCode: tenantCode
+          message: message
+          status: status
+      properties:
+        totalFailures:
+          description: The number of data versions that failed during the disabling
+            process.
+          format: int32
+          type: integer
+        totalSuccess:
+          description: The number of data versions that were disabled successfully.
+          format: int32
+          type: integer
+        results:
+          description: A list of objects representing the disabling process.
+          items:
+            $ref: '#/components/schemas/Result'
+          type: array
+      type: object
+      x-konfig-is-used-in-successful-response: true
+    DispatchingJobStatusResponse:
+      example:
+        jobId: jobId
+        totalJobsDispatched: 0
+        tenantCode: tenantCode
+        status: status
+      properties:
+        jobId:
+          description: The ID of the dispatching job that generated the extraction
+            jobs.
+          type: string
+        tenantCode:
+          description: The tenant that owns the dispatching job. This is usually the
+            administrating tenant.
+          type: string
+        status:
+          description: The current state of the job.
+          type: string
+        totalJobsDispatched:
+          description: The number of extraction jobs that were generated by the dispatching
+            job.
+          format: int32
+          type: integer
+      type: object
+      x-konfig-is-used-in-successful-response: true
+    EmptyAuthParamsDTO:
+      properties: {}
+      type: object
+    ExcludeDataUploadsRequest:
+      example:
+        model:
+          uploads:
+          - tenantCode: tenantCode
+            excludeAll: true
+            uploadTimes:
+            - uploadTimes
+            - uploadTimes
+          - tenantCode: tenantCode
+            excludeAll: true
+            uploadTimes:
+            - uploadTimes
+            - uploadTimes
+      properties:
+        model:
+          $ref: '#/components/schemas/UploadToExcludeModel'
+      type: object
+      x-konfig-properties:
+        model:
+          description: A form body key that contains a collection of key-value pairs.
+    ExtractionJob:
+      example:
+        currentStage: currentStage
+        tenantCode: tenantCode
+        extractionJobId: extractionJobId
+        status: status
+      properties:
+        extractionJobId:
+          description: The ID of the extraction job.
+          type: string
+        tenantCode:
+          description: The tenant code of the analytic tenant for the extraction job.
+          type: string
+        status:
+          description: |-
+            The current state of the job.
+             - Valid values: Pending, Running, Succeeded, Failed, Error, Cancelling, Cancelled, RolledBack, Rescheduling, Rescheduled.
+          type: string
+        currentStage:
+          description: |-
+            The current stage of the job. This is not returned if the stage is "Completed".
+             - Valid values: Initialize, Retrieve Main Subject, Retrieve Secondary Subjects, Retrieve Custom Subjects, Process Records, Publish Artifacts, Publish Records, Completed.
+          type: string
+      type: object
+    ExtractionJobAndStatusResponse:
+      example:
+        extractionJobs:
+        - currentStage: currentStage
+          tenantCode: tenantCode
+          extractionJobId: extractionJobId
+          status: status
+        - currentStage: currentStage
+          tenantCode: tenantCode
+          extractionJobId: extractionJobId
+          status: status
+        parentJobId: parentJobId
+        limit: 0
+        start: 6
+        parentTenantCode: parentTenantCode
+      properties:
+        parentJobId:
+          description: The ID of the dispatching job that generated the extraction
+            jobs.
+          type: string
+        parentTenantCode:
+          description: The tenant that owns the dispatching job. This is usually the
+            administrating tenant.
+          type: string
+        limit:
+          description: The number of extraction jobs to return. The maximum number
+            of jobs to return is 1000.
+          format: int32
+          type: integer
+        start:
+          description: "The index to start retrieving results from, also known as\
+            \ offset. The index begins at 0."
+          format: int32
+          type: integer
+        extractionJobs:
+          description: A list of extraction job information.
+          items:
+            $ref: '#/components/schemas/ExtractionJob'
+          type: array
+      type: object
+      x-konfig-is-used-in-successful-response: true
+    ExtractorCredentialAPIDTO:
+      example:
+        authContext: authContext
+        displayName: displayName
+        credentialId: credentialId
+        isInherited: true
+        dataProvider: dataProvider
+      properties:
+        credentialId:
+          description: The ID associated with the connector credential.
+          type: string
+        displayName:
+          description: An identifiable connector credential name that is displayed
+            within Visier.
+          type: string
+        dataProvider:
+          description: The data provider associated with the credential.
+          type: string
+        isInherited:
+          description: Whether this credential is inherited from another tenant.
+          type: boolean
+        authContext:
+          type: string
+      type: object
+    ExtractorCredentialsAPIDTO:
+      example:
+        connectorCredentials:
+        - authContext: authContext
+          displayName: displayName
+          credentialId: credentialId
+          isInherited: true
+          dataProvider: dataProvider
+        - authContext: authContext
+          displayName: displayName
+          credentialId: credentialId
+          isInherited: true
+          dataProvider: dataProvider
+        limit: 0
+        start: 6
+      properties:
+        connectorCredentials:
+          description: A list of objects representing all the available connector
+            credentials in Production.
+          items:
+            $ref: '#/components/schemas/ExtractorCredentialAPIDTO'
+          type: array
+        limit:
+          description: The number of connector credentials to return. The maximum
+            number of data connector credentials to return is 1000.
+          format: uint32
+          type: integer
+        start:
+          description: "The index to start retrieving values from, also known as offset.\
+            \ The index begins at 0."
+          format: uint32
+          type: integer
+      type: object
+      x-konfig-is-used-in-successful-response: true
+    FusionAuthParamsDTO:
+      example:
+        password: password
+        hostDomainName: hostDomainName
+        username: username
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+        hostDomainName:
+          type: string
+      type: object
+    GongAuthParamsDTO:
+      example:
+        clientId: clientId
+        clientSecret: clientSecret
+      properties:
+        clientId:
+          type: string
+        clientSecret:
+          type: string
+      type: object
+    GoogleProtobufAny:
+      additionalProperties: true
+      description: Contains an arbitrary serialized message along with a @type that
+        describes the type of the serialized message.
+      properties:
+        '@type':
+          description: The type of the serialized message.
+          type: string
+      type: object
+    GoogleSheetsAuthParamsDTO:
+      example:
+        authCode: authCode
+        clientId: clientId
+        configuration: configuration
+        clientSecret: clientSecret
+      properties:
+        authCode:
+          type: string
+        configuration:
+          type: string
+        clientId:
+          type: string
+        clientSecret:
+          type: string
+      type: object
+    GoogleWorkspaceAuthParamsDTO:
+      example:
+        authCode: authCode
+        clientId: clientId
+        clientSecret: clientSecret
+      properties:
+        authCode:
+          type: string
+        clientId:
+          type: string
+        clientSecret:
+          type: string
+      type: object
+    GreenhouseAuthParamsDTO:
+      example:
+        apiKey: apiKey
+      properties:
+        apiKey:
+          type: string
+      type: object
+    IcimsAuthParamsDTO:
+      example:
+        password: password
+        customerId: customerId
+        username: username
+      properties:
+        customerId:
+          type: string
+        username:
+          type: string
+        password:
+          type: string
+      type: object
+    ImportDefinitionAPIDTO:
+      example:
+        connectorId: connectorId
+        displayName: displayName
+        credentialId: credentialId
+      properties:
+        connectorId:
+          description: The ID associated with the data connector.
+          type: string
+        displayName:
+          description: An identifiable data connector name that is displayed within
+            Visier.
+          type: string
+        credentialId:
+          description: The ID associated with the connector credentials currently
+            assigned to this data connector.
+          type: string
+      type: object
+    ImportDefinitionsAPIDTO:
+      example:
+        dataConnectors:
+        - connectorId: connectorId
+          displayName: displayName
+          credentialId: credentialId
+        - connectorId: connectorId
+          displayName: displayName
+          credentialId: credentialId
+        limit: 0
+        start: 6
+      properties:
+        dataConnectors:
+          description: A list of objects representing all the available data connectors
+            in Production.
+          items:
+            $ref: '#/components/schemas/ImportDefinitionAPIDTO'
+          type: array
+        limit:
+          description: The number of data connectors to return. The maximum number
+            of data connectors to return is 1000.
+          format: uint32
+          type: integer
+        start:
+          description: "The index to start retrieving values from, also known as offset.\
+            \ The index begins at 0."
+          format: uint32
+          type: integer
+      type: object
+      x-konfig-is-used-in-successful-response: true
+    IncludeDataUploadsRequest:
+      example:
+        model:
+          uploads:
+          - includeAll: true
+            tenantCode: tenantCode
+            uploadTimes:
+            - uploadTimes
+            - uploadTimes
+          - includeAll: true
+            tenantCode: tenantCode
+            uploadTimes:
+            - uploadTimes
+            - uploadTimes
+      properties:
+        model:
+          $ref: '#/components/schemas/UploadToIncludeModel'
+      type: object
+      x-konfig-properties:
+        model:
+          description: A form body key that contains a collection of key-value pairs.
+    InternalS3AuthParamsDTO:
+      example:
+        bucketName: bucketName
+        path: path
+      properties:
+        bucketName:
+          type: string
+        path:
+          type: string
+      type: object
+    JdbcAuthParamsDTO:
+      example:
+        password: password
+        jdbcConnectString: jdbcConnectString
+        username: username
+      properties:
+        jdbcConnectString:
+          type: string
+        username:
+          type: string
+        password:
+          type: string
+      type: object
+    JiraAuthParamsDTO:
+      example:
+        hostName: hostName
+        apiToken: apiToken
+        connectParams:
+          clientKey: clientKey
+          appKey: appKey
+          sharedSecret: sharedSecret
+      properties:
+        apiToken:
+          type: string
+        hostName:
+          type: string
+        connectParams:
+          $ref: '#/components/schemas/JiraConnectParamsDTO'
+      type: object
+    JiraConnectParamsDTO:
+      example:
+        clientKey: clientKey
+        appKey: appKey
+        sharedSecret: sharedSecret
+      properties:
+        appKey:
+          type: string
+        clientKey:
+          type: string
+        sharedSecret:
+          type: string
+      type: object
+    JobCancellationResultDTO:
+      example:
+        jobId: jobId
+        jobStatus: jobStatus
+        parentJobId: parentJobId
+        cancelStatus: CANCEL_FAILED
+        tenantCode: tenantCode
+        jobType: jobType
+        message: message
+      properties:
+        tenantCode:
+          description: The analytic tenant whose job the cancel operation was conducted
+            for.
+          type: string
+        jobId:
+          description: The job ID of the job that the cancel operation was conducted
+            for.
+          type: string
+        jobType:
+          description: The job type associated with the job ID.
+          type: string
+        parentJobId:
+          description: "If applicable, the job ID of the job that spawned the given\
+            \ job."
+          type: string
+        cancelStatus:
+          description: The status of the cancellation.
+          enum:
+          - CANCEL_FAILED
+          - CANCEL_SUCCEEDED
+          format: enum
+          type: string
+        jobStatus:
+          description: "The job status after the cancel operation. If successful,\
+            \ the status is either Cancelled or Cancelling."
+          type: string
+        message:
+          description: "If applicable, the message explains what errors occurred while\
+            \ cancelling the jobs."
+          type: string
+      type: object
+    JobCancellationResultsDTO:
+      example:
+        jobCancellationResults:
+        - jobId: jobId
+          jobStatus: jobStatus
+          parentJobId: parentJobId
+          cancelStatus: CANCEL_FAILED
+          tenantCode: tenantCode
+          jobType: jobType
+          message: message
+        - jobId: jobId
+          jobStatus: jobStatus
+          parentJobId: parentJobId
+          cancelStatus: CANCEL_FAILED
+          tenantCode: tenantCode
+          jobType: jobType
+          message: message
+      properties:
+        jobCancellationResults:
+          description: A list of objects representing the job cancellation results.
+          items:
+            $ref: '#/components/schemas/JobCancellationResultDTO'
+          type: array
+      type: object
+      x-konfig-is-used-in-successful-response: true
+    LeverAuthParamsDTO:
+      example:
+        apiKey: apiKey
+      properties:
+        apiKey:
+          type: string
+      type: object
+    MapValue:
+      example:
+        value:
+        - value
+        - value
+      properties:
+        value:
+          description: "A comma-separated list of encrypted, compressed batch filenames\
+            \ to be processed."
+          items:
+            type: string
+          type: array
+      type: object
+    MedalliaAuthParamsDTO:
+      example:
+        clientId: clientId
+        tenantDomainName: tenantDomainName
+        clientSecret: clientSecret
+        instanceUrl: instanceUrl
+      properties:
+        tenantDomainName:
+          type: string
+        instanceUrl:
+          type: string
+        clientId:
+          type: string
+        clientSecret:
+          type: string
+      type: object
+    Microsoft365AuthParamsDTO:
+      example:
+        oAuthTenantId: oAuthTenantId
+        clientId: clientId
+        clientSecret: clientSecret
+      properties:
+        oAuthTenantId:
+          type: string
+        clientId:
+          type: string
+        clientSecret:
+          type: string
+      type: object
+    MultipleTenantDataVersionsDetailsDTO:
+      example:
+        tenantCode: tenantCode
+        dataVersions:
+        - dataVersion: dataVersion
+          dataVersionDate: dataVersionDate
+        - dataVersion: dataVersion
+          dataVersionDate: dataVersionDate
+      properties:
+        tenantCode:
+          description: The owner of the data versions.
+          type: string
+        dataVersions:
+          description: |-
+            The latest enabled data versions for the given analytic tenant. If the analytic tenant
+             has no enabled data versions, an empty string "" is returned.
+          items:
+            $ref: '#/components/schemas/DataVersionAndDateDTO'
+          type: array
+      type: object
+    MultipleTenantDataVersionsListDTO:
+      example:
+        tenants:
+        - tenantCode: tenantCode
+          dataVersions:
+          - dataVersion: dataVersion
+            dataVersionDate: dataVersionDate
+          - dataVersion: dataVersion
+            dataVersionDate: dataVersionDate
+        - tenantCode: tenantCode
+          dataVersions:
+          - dataVersion: dataVersion
+            dataVersionDate: dataVersionDate
+          - dataVersion: dataVersion
+            dataVersionDate: dataVersionDate
+        limit: 0
+        start: 6
+      properties:
+        tenants:
+          description: A list of analytic tenants and their latest enabled data versions.
+          items:
+            $ref: '#/components/schemas/MultipleTenantDataVersionsDetailsDTO'
+          type: array
+        limit:
+          description: The number of analytic tenants to retrieve. The maximum number
+            to retrieve is 1000.
+          format: uint32
+          type: integer
+        start:
+          description: "The index to start retrieving results from, also known as\
+            \ offset. The index begins at 0."
+          format: uint32
+          type: integer
+      type: object
+      x-konfig-is-used-in-successful-response: true
+    MySqlAuthParamsDTO:
+      example:
+        password: password
+        database: database
+        port: port
+        host: host
+        username: username
+        sslMode: sslMode
+      properties:
+        host:
+          type: string
+        port:
+          type: string
+        username:
+          type: string
+        password:
+          type: string
+        database:
+          type: string
+        sslMode:
+          type: string
+      type: object
+    NamelyAuthParamsDTO:
+      example:
+        authCode: authCode
+      properties:
+        authCode:
+          type: string
+      type: object
+    OracleDbAuthParamsDTO:
+      example:
+        password: password
+        port: port
+        host: host
+        serviceName: serviceName
+        username: username
+      properties:
+        host:
+          type: string
+        port:
+          type: string
+        username:
+          type: string
+        password:
+          type: string
+        serviceName:
+          type: string
+      type: object
+    ProcessingJob:
+      example:
+        jobId: jobId
+        dataVersion: dataVersion
+        tenantCode: tenantCode
+        message: message
+        status: status
+      properties:
+        jobId:
+          description: The job ID of the processing job for the analytic tenant.
+          type: string
+        tenantCode:
+          description: The analytic tenant code.
+          type: string
+        dataVersion:
+          description: The data version associated with the processing job.
+          type: string
+        status:
+          description: The status of the receiving job for the analytic tenant.
+          type: string
+        message:
+          description: A meaningful message about the processing job.
+          type: string
+      type: object
+    ProcessingJobAndStatusResponse:
+      example:
+        processingJobs:
+        - jobId: jobId
+          dataVersion: dataVersion
+          tenantCode: tenantCode
+          message: message
+          status: status
+        - jobId: jobId
+          dataVersion: dataVersion
+          tenantCode: tenantCode
+          message: message
+          status: status
+        parentJobId: parentJobId
+        limit: 0
+        start: 6
+        parentTenantCode: parentTenantCode
+      properties:
+        parentJobId:
+          description: The ID of the dispatching job that generated the extraction
+            jobs.
+          type: string
+        parentTenantCode:
+          description: The tenant that owns the dispatching job. This is usually the
+            administrating tenant.
+          type: string
+        limit:
+          description: The number of processing jobs to return. The maximum number
+            of jobs to return is 1000.
+          format: int32
+          type: integer
+        start:
+          description: "The index to start retrieving results from, also known as\
+            \ offset. The index begins at 0."
+          format: int32
+          type: integer
+        processingJobs:
+          description: A list of processing job information.
+          items:
+            $ref: '#/components/schemas/ProcessingJob'
+          type: array
+      type: object
+      x-konfig-is-used-in-successful-response: true
+    ProcessingJobStatusResponse:
+      example:
+        processingJobs:
+        - jobId: jobId
+          dataVersion: dataVersion
+          tenantCode: tenantCode
+          message: message
+          status: status
+        - jobId: jobId
+          dataVersion: dataVersion
+          tenantCode: tenantCode
+          message: message
+          status: status
+        parentJobId: parentJobId
+        limit: 0
+        start: 6
+        parentTenantCode: parentTenantCode
+      properties:
+        parentJobId:
+          description: The job ID of the receiving job that spawned this job
+          type: string
+        parentTenantCode:
+          description: The tenant code of the receiving job that spawned this job.
+          type: string
+        limit:
+          description: The limit of processing jobs to retrieve per page.
+          format: int32
+          type: integer
+        start:
+          description: "The index to start retrieving results from, also known as\
+            \ offset. The index begins at 0."
+          format: int32
+          type: integer
+        processingJobs:
+          description: A list of objects representing the processing jobs to retrieve.
+          items:
+            $ref: '#/components/schemas/ProcessingJob'
+          type: array
+      type: object
+      x-konfig-is-used-in-successful-response: true
+    QualtricsAuthParamsDTO:
+      example:
+        apiToken: apiToken
+        dataCenterId: dataCenterId
+      properties:
+        apiToken:
+          type: string
+        dataCenterId:
+          type: string
+      type: object
+    ReceivingJob:
+      example:
+        receivingJobId: receivingJobId
+        tenantCode: tenantCode
+        status: status
+      properties:
+        receivingJobId:
+          description: The job ID of the receiving job for the analytic tenant.
+          type: string
+        tenantCode:
+          description: The analytic tenant code.
+          type: string
+        status:
+          description: The status of the receiving job for the analytic tenant.
+          type: string
+      type: object
+    ReceivingJobAndStatusResponse:
+      example:
+        parentJobId: parentJobId
+        limit: 0
+        start: 6
+        receivingJobs:
+        - receivingJobId: receivingJobId
+          tenantCode: tenantCode
+          status: status
+        - receivingJobId: receivingJobId
+          tenantCode: tenantCode
+          status: status
+        parentTenantCode: parentTenantCode
+      properties:
+        parentJobId:
+          description: The ID of the dispatching job that generated the extraction
+            jobs.
+          type: string
+        parentTenantCode:
+          description: The tenant that owns the dispatching job. This is usually the
+            administrating tenant.
+          type: string
+        limit:
+          description: The number of receiving jobs to return. The maximum number
+            of jobs to return is 1000.
+          format: int32
+          type: integer
+        start:
+          description: "The index to start retrieving results from, also known as\
+            \ offset. The index begins at 0."
+          format: int32
+          type: integer
+        receivingJobs:
+          description: A list of receiving job information.
+          items:
+            $ref: '#/components/schemas/ReceivingJob'
+          type: array
+      type: object
+      x-konfig-is-used-in-successful-response: true
+    ReceivingJobStatusResponse:
+      example:
+        jobId: jobId
+        parentJobId: parentJobId
+        receivingJobs:
+        - receivingJobId: receivingJobId
+          tenantCode: tenantCode
+          status: status
+        - receivingJobId: receivingJobId
+          tenantCode: tenantCode
+          status: status
+        status: status
+        parentTenantCode: parentTenantCode
+      properties:
+        jobId:
+          description: The unique identifier associated with the receiving job.
+          type: string
+        status:
+          description: The status of the receiving job.
+          type: string
+        parentJobId:
+          description: The job ID of the receiving job that spawned this job.
+          type: string
+        parentTenantCode:
+          description: The tenant code of the receiving job that spawned this job.
+          type: string
+        receivingJobs:
+          description: A list of objects representing the receiving jobs to retrieve.
+          items:
+            $ref: '#/components/schemas/ReceivingJob'
+          type: array
+      type: object
+      x-konfig-is-used-in-successful-response: true
+    RedshiftAuthParamsDTO:
+      example:
+        schema: schema
+        endpoint: endpoint
+        database: database
+        password: password
+        port: port
+        tablePrefix: tablePrefix
+        username: username
+      properties:
+        endpoint:
+          type: string
+        port:
+          type: string
+        database:
+          type: string
+        username:
+          type: string
+        password:
+          type: string
+        tablePrefix:
+          type: string
+        schema:
+          type: string
+      type: object
+    Result:
+      example:
+        jobId: jobId
+        dataVersion: dataVersion
+        tenantCode: tenantCode
+        message: message
+        status: status
+      properties:
+        jobId:
+          description: "If applicable, the job ID associated with the data version."
+          type: string
+        dataVersion:
+          description: "If applicable, the data version that was disabled."
+          type: string
+        tenantCode:
+          description: The analytic tenant that the disable operation was conducted
+            for.
+          type: string
+        status:
+          description: The outcome of the disabling operation.
+          type: string
+        message:
+          description: "If applicable, the message explains what errors occurred while\
+            \ disabling data versions."
+          type: string
+      type: object
+    SalesforceAuthParamsDTO:
+      example:
+        clientId: clientId
+        refreshToken: refreshToken
+      properties:
+        refreshToken:
+          type: string
+        clientId:
+          type: string
+      type: object
+    SalesforceV2AuthParamsDTO:
+      example:
+        loginHost: loginHost
+        authCode: authCode
+        clientId: clientId
+        clientSecret: clientSecret
+      properties:
+        authCode:
+          type: string
+        clientId:
+          type: string
+        clientSecret:
+          type: string
+        loginHost:
+          type: string
+      type: object
+    ServiceNowAuthParamsDTO:
+      example:
+        password: password
+        hostDomainName: hostDomainName
+        username: username
+      properties:
+        hostDomainName:
+          type: string
+        username:
+          type: string
+        password:
+          type: string
+      type: object
+    SlackAuthParamsDTO:
+      example:
+        authCode: authCode
+        clientId: clientId
+        clientSecret: clientSecret
+      properties:
+        authCode:
+          type: string
+        clientId:
+          type: string
+        clientSecret:
+          type: string
+      type: object
+    SnowflakeAuthParamsDTO:
+      example:
+        schema: schema
+        privateKey: privateKey
+        database: database
+        password: password
+        accountIdentifier: accountIdentifier
+        warehouse: warehouse
+        username: username
+      properties:
+        accountIdentifier:
+          type: string
+        database:
+          type: string
+        schema:
+          type: string
+        username:
+          type: string
+        password:
+          type: string
+        warehouse:
+          type: string
+        privateKey:
+          type: string
+      type: object
+    SqlServerAuthParamsDTO:
+      example:
+        password: password
+        database: database
+        port: port
+        host: host
+        username: username
+      properties:
+        host:
+          type: string
+        port:
+          type: string
+        username:
+          type: string
+        password:
+          type: string
+        database:
+          type: string
+      type: object
+    StartExtractionModel:
+      example:
+        tenants:
+        - tenants
+        - tenants
+        overrideLastExtractionTimestamp: overrideLastExtractionTimestamp
+        publishDataLoadArtifacts: true
+        disableArtifactGeneration: true
+        allTenants: true
+        runProcessingJob: true
+        dataCategoryId: dataCategoryId
+      properties:
+        tenants:
+          description: A list of analytic tenants to dispatch extraction jobs for.
+            One extraction job is dispatched per tenant.
+          items:
+            type: string
+          type: array
+        allTenants:
+          description: "If \"true\", one extraction job is dispatched for each accessible\
+            \ analytic tenant."
+          type: boolean
+        overrideLastExtractionTimestamp:
+          description: The time from which to extract data.
+          type: string
+        publishDataLoadArtifacts:
+          description: "If \"true\", the generated data load artifacts are published\
+            \ to Production immediately."
+          type: boolean
+        runProcessingJob:
+          description: "If \"true\", a processing job is spawned after a dispatched\
+            \ extraction job runs successfully."
+          type: boolean
+        dataCategoryId:
+          description: The unique identifier of the data category on which to trigger
+            the extraction job.
+          type: string
+        disableArtifactGeneration:
+          description: "If \"true\", the job does not generate data load artifacts.\
+            \ If unspecified, the default is \"false\"."
+          type: boolean
+      type: object
+    StartExtractionRequest:
+      example:
+        model:
+          tenants:
+          - tenants
+          - tenants
+          overrideLastExtractionTimestamp: overrideLastExtractionTimestamp
+          publishDataLoadArtifacts: true
+          disableArtifactGeneration: true
+          allTenants: true
+          runProcessingJob: true
+          dataCategoryId: dataCategoryId
+      properties:
+        model:
+          $ref: '#/components/schemas/StartExtractionModel'
+      type: object
+      x-konfig-properties:
+        model:
+          description: A form body key that contains a collection of key-value pairs.
+    StartExtractionResponse:
+      example:
+        jobId: jobId
+      properties:
+        jobId:
+          description: The ID of the dispatching job that generated the extraction
+            jobs.
+          type: string
+      type: object
+      x-konfig-is-used-in-successful-response: true
+    Status:
+      description: "The `Status` type defines a logical error model that is suitable\
+        \ for different programming environments, including REST APIs and RPC APIs.\
+        \ It is used by [gRPC](https://github.com/grpc). Each `Status` message contains\
+        \ three pieces of data: error code, error message, and error details. You\
+        \ can find out more about this error model and how to work with it in the\
+        \ [API Design Guide](https://cloud.google.com/apis/design/errors)."
+      properties:
+        code:
+          description: "The status code, which should be an enum value of [google.rpc.Code][google.rpc.Code]."
+          format: int32
+          type: integer
+        message:
+          description: "A developer-facing error message, which should be in English.\
+            \ Any user-facing error message should be localized and sent in the [google.rpc.Status.details][google.rpc.Status.details]\
+            \ field, or localized by the client."
+          type: string
+        details:
+          description: A list of messages that carry the error details.  There is
+            a common set of message types for APIs to use.
+          items:
+            $ref: '#/components/schemas/GoogleProtobufAny'
+          type: array
+      type: object
+      x-konfig-is-used-in-successful-response: true
+    SubjectMissingAccessDTO:
+      example:
+        subject: Employee
+        attributes:
+        - attributes
+        - attributes
+      properties:
+        subject:
+          description: The subjects that cannot be accessed.
+          enum:
+          - Employee
+          - Employee_Budgeted_Compensation
+          - Employment_Start
+          - Employment_Exit
+          - Absenteeism
+          - Supervisory
+          - Organization
+          - Compensation_Payout
+          - CustomSubject
+          - TestConnectionSubject
+          - Internal_Placement
+          - Pay_Change
+          - Hire
+          - Applicant
+          - Candidate
+          - Requisition
+          format: enum
+          type: string
+        attributes:
+          description: The attributes that cannot be accessed.
+          items:
+            type: string
+          type: array
+      type: object
+    SuccessFactorsAuthParamsDTO:
+      example:
+        companyID: companyID
+        password: password
+        hostDomainName: hostDomainName
+        username: username
+      properties:
+        hostDomainName:
+          type: string
+        companyID:
+          type: string
+        username:
+          type: string
+        password:
+          type: string
+      type: object
+    TenantAndCredential:
+      example:
+        credentialId: credentialId
+        tenantCode: tenantCode
+      properties:
+        tenantCode:
+          description: The unique identifier associated with the tenant.
+          type: string
+        credentialId:
+          description: The unique identifier associated with the credential.
+          type: string
+      type: object
+    TenantDataUploadStatusResponseDTO:
+      example:
+        uploadTime: uploadTime
+        included: true
+      properties:
+        uploadTime:
+          description: The upload time of the data upload.
+          type: string
+        included:
+          description: "If \"true\", the data upload is included."
+          type: boolean
+      type: object
+    TenantDataUploadUpdateStatusResponseDTO:
+      example:
+        tenantCode: tenantCode
+        uploadTime: uploadTime
+        message: message
+        status: status
+      properties:
+        tenantCode:
+          description: The analytic tenant that the exclusion operation was conducted
+            for.
+          type: string
+        uploadTime:
+          description: The upload time of the data upload
+          type: string
+        status:
+          description: The outcome of the exclusion operation.
+          type: string
+        message:
+          description: "If applicable, the message explains why errors were encountered\
+            \ during the exclusion operation."
+          type: string
+      type: object
+    TenantDataUploadsListResponseDTO:
+      example:
+        tenants:
+        - tenantCode: tenantCode
+          uploads:
+          - uploadTime: uploadTime
+            included: true
+          - uploadTime: uploadTime
+            included: true
+        - tenantCode: tenantCode
+          uploads:
+          - uploadTime: uploadTime
+            included: true
+          - uploadTime: uploadTime
+            included: true
+        limit: 0
+        start: 6
+      properties:
+        tenants:
+          description: A list of objects representing analytic tenants and their data
+            uploads.
+          items:
+            $ref: '#/components/schemas/TenantDataUploadsResponseDTO'
+          type: array
+        limit:
+          description: The number of analytic tenants to retrieve. The maximum number
+            of analytic tenants to retrieve is 1000.
+          format: uint32
+          type: integer
+        start:
+          description: "The index to start retrieving results from, also known as\
+            \ offset. The index begins at 0."
+          format: uint32
+          type: integer
+      type: object
+      x-konfig-is-used-in-successful-response: true
+    TenantDataUploadsResponseDTO:
+      example:
+        tenantCode: tenantCode
+        uploads:
+        - uploadTime: uploadTime
+          included: true
+        - uploadTime: uploadTime
+          included: true
+      properties:
+        tenantCode:
+          description: The tenant code of the analytic tenant owning the data uploads.
+          type: string
+        uploads:
+          description: The data uploads completed for the specified analytic tenant.
+            The list is empty if no previous data uploads are found for the analytic
+            tenant.
+          items:
+            $ref: '#/components/schemas/TenantDataUploadStatusResponseDTO'
+          type: array
+      type: object
+    TenantDataUploadsUpdateResponseDTO:
+      example:
+        totalFailures: 0
+        totalSuccess: 6
+        uploads:
+        - tenantCode: tenantCode
+          uploadTime: uploadTime
+          message: message
+          status: status
+        - tenantCode: tenantCode
+          uploadTime: uploadTime
+          message: message
+          status: status
+      properties:
+        totalFailures:
+          description: The number of data uploads that failed during the exclusion
+            operation.
+          format: uint32
+          type: integer
+        totalSuccess:
+          description: The number of data uploads that were excluded successfully.
+          format: uint32
+          type: integer
+        uploads:
+          description: A list of objects representing the results of the data upload
+            exclusion.
+          items:
+            $ref: '#/components/schemas/TenantDataUploadUpdateStatusResponseDTO'
+          type: array
+      type: object
+      x-konfig-is-used-in-successful-response: true
+    UltimateAuthParamsDTO:
+      example:
+        password: password
+        apiKey: apiKey
+        hostDomainName: hostDomainName
+        username: username
+        userAccessKey: userAccessKey
+      properties:
+        hostDomainName:
+          type: string
+        apiKey:
+          type: string
+        username:
+          type: string
+        password:
+          type: string
+        userAccessKey:
+          type: string
+      type: object
+    UploadToExclude:
+      example:
+        tenantCode: tenantCode
+        excludeAll: true
+        uploadTimes:
+        - uploadTimes
+        - uploadTimes
+      properties:
+        tenantCode:
+          description: The tenant code of the analytic tenant you are excluding a
+            data upload for.
+          type: string
+        excludeAll:
+          description: "If \"true\", all data uploads are excluded for the analytic\
+            \ tenant."
+          type: boolean
+        uploadTimes:
+          description: A comma-separated list of strings representing the upload time
+            of each data upload to exclude.
+          items:
+            type: string
+          type: array
+      type: object
+    UploadToExcludeModel:
+      example:
+        uploads:
+        - tenantCode: tenantCode
+          excludeAll: true
+          uploadTimes:
+          - uploadTimes
+          - uploadTimes
+        - tenantCode: tenantCode
+          excludeAll: true
+          uploadTimes:
+          - uploadTimes
+          - uploadTimes
+      properties:
+        uploads:
+          description: A list of objects representing the data uploads to exclude
+            for a particular analytic tenant.
+          items:
+            $ref: '#/components/schemas/UploadToExclude'
+          type: array
+      type: object
+    UploadToInclude:
+      example:
+        includeAll: true
+        tenantCode: tenantCode
+        uploadTimes:
+        - uploadTimes
+        - uploadTimes
+      properties:
+        tenantCode:
+          description: The tenant code of the analytic tenant you are including a
+            data upload for.
+          type: string
+        includeAll:
+          description: "If \"true\", all data uploads are included for the analytic\
+            \ tenant."
+          type: boolean
+        uploadTimes:
+          description: A comma-separated list of strings representing the upload time
+            of each data upload to include.
+          items:
+            type: string
+          type: array
+      type: object
+    UploadToIncludeModel:
+      example:
+        uploads:
+        - includeAll: true
+          tenantCode: tenantCode
+          uploadTimes:
+          - uploadTimes
+          - uploadTimes
+        - includeAll: true
+          tenantCode: tenantCode
+          uploadTimes:
+          - uploadTimes
+          - uploadTimes
+      properties:
+        uploads:
+          description: A list of objects representing the data uploads to include
+            for a particular analytic tenant.
+          items:
+            $ref: '#/components/schemas/UploadToInclude'
+          type: array
+      type: object
+    WillowAuthParamsDTO:
+      example:
+        hostName: hostName
+        apiToken: apiToken
+      properties:
+        apiToken:
+          type: string
+        hostName:
+          type: string
+      type: object
+    WorkdayAuthParamsDTO:
+      example:
+        password: password
+        implementationName: implementationName
+        apiKey: apiKey
+        domainName: domainName
+        integrationSystemId: integrationSystemId
+        userId: userId
+      properties:
+        userId:
+          type: string
+        domainName:
+          type: string
+        implementationName:
+          type: string
+        password:
+          type: string
+        integrationSystemId:
+          type: string
+        apiKey:
+          type: string
+      type: object
+    WorkdayRaasAuthParamsDTO:
+      example:
+        password: password
+        testReportUrl: testReportUrl
+        implementationName: implementationName
+        domainName: domainName
+        userId: userId
+      properties:
+        userId:
+          type: string
+        domainName:
+          type: string
+        implementationName:
+          type: string
+        password:
+          type: string
+        testReportUrl:
+          type: string
+      type: object
+    ZoomAuthParamsDTO:
+      example:
+        authCode: authCode
+        clientId: clientId
+        clientSecret: clientSecret
+      properties:
+        authCode:
+          type: string
+        clientId:
+          type: string
+        clientSecret:
+          type: string
+      type: object
+    DataAndJobHandlingDeleteConnectorCredentialResponse:
+      type: string
+      x-konfig-is-used-in-successful-response: true
+    konfig-generated-schema-single-parameter-schema-get--v1-op-data-connector-credentials:
+      properties:
+        tenantCode:
+          type: string
+        limit:
+          format: int32
+          type: integer
+        start:
+          format: int32
+          type: integer
+      type: object
+      x-do-not-generate: true
+      x-konfig-is-parameter:
+      - tenantCode
+      - limit
+      - start
+    konfig-generated-schema-single-parameter-schema-post--v1-op-data-connector-credentials:
+      properties:
+        tenantCode:
+          type: string
+        dataProviderAuthParams:
+          $ref: '#/components/schemas/DataProviderAuthParamsDTO'
+        dataProviderBasicInformation:
+          $ref: '#/components/schemas/DataProviderBasicInformationDTO'
+        dataProviderMetadata:
+          $ref: '#/components/schemas/DataProviderBasicMetadataDTO'
+      type: object
+      x-do-not-generate: true
+      x-konfig-is-parameter:
+      - tenantCode
+    konfig-generated-schema-single-parameter-schema-get--v1-op-data-connectors:
+      properties:
+        tenantCode:
+          type: string
+        limit:
+          format: int32
+          type: integer
+        start:
+          format: int32
+          type: integer
+      type: object
+      x-do-not-generate: true
+      x-konfig-is-parameter:
+      - tenantCode
+      - limit
+      - start
+    konfig-generated-schema-single-parameter-schema-post--v1-op-data-connectors-assignCredentials:
+      properties:
+        connectors:
+          description: A list of objects representing the data connectors to be assigned
+            with credentials.
+          items:
+            $ref: '#/components/schemas/Connector'
+          type: array
+      type: object
+      x-do-not-generate: true
+      x-konfig-is-parameter: []
+    konfig-generated-schema-single-parameter-schema-put--v1-op-data-versions-disable:
+      properties:
+        model:
+          $ref: '#/components/schemas/DisableDVModel'
+      type: object
+      x-do-not-generate: true
+      x-konfig-is-parameter: []
+    konfig-generated-schema-single-parameter-schema-post--v1-op-data-startExtractAndLoad:
+      properties:
+        model:
+          $ref: '#/components/schemas/StartExtractionModel'
+      type: object
+      x-do-not-generate: true
+      x-konfig-is-parameter: []
+    konfig-generated-schema-single-parameter-schema-post--v1-op-data-startload:
+      properties:
+        model:
+          additionalProperties:
+            $ref: '#/components/schemas/MapValue'
+          description: |-
+            A form body key that contains a collection of key-value pairs.
+
+             **Note:** The only supported key value is `files` and the value is a comma-separated list of file names.
+             Example:
+             `"files": "/path/to/file1.zip.gpg,/path/to/another/file.zip.gpg"`
+          type: object
+      type: object
+      x-do-not-generate: true
+      x-konfig-is-parameter: []
+    konfig-generated-schema-single-parameter-schema-get--v1-op-data-uploads:
+      properties:
+        uploadJobId:
+          type: string
+        tenantCode:
+          format: int32
+          type: integer
+        limit:
+          format: int32
+          type: integer
+        start:
+          format: int32
+          type: integer
+        numberOfDataUploads:
+          format: int32
+          type: integer
+      type: object
+      x-do-not-generate: true
+      x-konfig-is-parameter:
+      - uploadJobId
+      - tenantCode
+      - limit
+      - start
+      - numberOfDataUploads
+    konfig-generated-schema-single-parameter-schema-put--v1-op-data-uploads-exclude:
+      properties:
+        model:
+          $ref: '#/components/schemas/UploadToExcludeModel'
+      type: object
+      x-do-not-generate: true
+      x-konfig-is-parameter: []
+    konfig-generated-schema-single-parameter-schema-put--v1-op-data-uploads-include:
+      properties:
+        model:
+          $ref: '#/components/schemas/UploadToIncludeModel'
+      type: object
+      x-do-not-generate: true
+      x-konfig-is-parameter: []
+    konfig-generated-schema-single-parameter-schema-get--v1-op-job-status-jobs:
+      properties:
+        startTime:
+          type: string
+        endTime:
+          type: string
+        status:
+          type: string
+      type: object
+      x-do-not-generate: true
+      x-konfig-is-parameter:
+      - startTime
+      - endTime
+      - status
+    konfig-generated-schema-single-parameter-schema-get--v1-op-job-status-jobs-:jobId:
+      properties:
+        jobId:
+          type: string
+      type: object
+      x-do-not-generate: true
+      x-konfig-is-parameter:
+      - jobId
+    konfig-generated-schema-single-parameter-schema-post--v1-op-jobs-cancel:
+      properties:
+        jobIds:
+          description: A list of jobs to cancel. The maximum number of jobs that can
+            be cancelled is 500.
+          items:
+            type: string
+          type: array
+      type: object
+      x-do-not-generate: true
+      x-konfig-is-parameter: []
+    konfig-generated-schema-single-parameter-schema-get--v1-op-jobs-dispatching-jobs-:jobId:
+      properties:
+        jobId:
+          type: string
+      type: object
+      x-do-not-generate: true
+      x-konfig-is-parameter:
+      - jobId
+    konfig-generated-schema-single-parameter-schema-get--v1-op-jobs-dispatching-jobs-:jobId-extraction-jobs:
+      properties:
+        dispatchingJobId:
+          type: string
+        tenantCode:
+          type: string
+        limit:
+          format: int32
+          type: integer
+        start:
+          format: int32
+          type: integer
+        jobId:
+          type: string
+      type: object
+      x-do-not-generate: true
+      x-konfig-is-parameter:
+      - dispatchingJobId
+      - tenantCode
+      - limit
+      - start
+      - jobId
+    konfig-generated-schema-single-parameter-schema-get--v1-op-jobs-dispatching-jobs-:jobId-processing-jobs:
+      properties:
+        dispatchingJobId:
+          type: string
+        tenantCode:
+          type: string
+        limit:
+          format: int32
+          type: integer
+        start:
+          format: int32
+          type: integer
+        jobId:
+          type: string
+      type: object
+      x-do-not-generate: true
+      x-konfig-is-parameter:
+      - dispatchingJobId
+      - tenantCode
+      - limit
+      - start
+      - jobId
+    konfig-generated-schema-single-parameter-schema-get--v1-op-jobs-dispatching-jobs-:jobId-receiving-jobs:
+      properties:
+        dispatchingJobId:
+          type: string
+        tenantCode:
+          type: string
+        limit:
+          format: int32
+          type: integer
+        start:
+          format: int32
+          type: integer
+        jobId:
+          type: string
+      type: object
+      x-do-not-generate: true
+      x-konfig-is-parameter:
+      - dispatchingJobId
+      - tenantCode
+      - limit
+      - start
+      - jobId
+    konfig-generated-schema-single-parameter-schema-get--v1-op-jobs-receiving-jobs-:receivingJobId:
+      properties:
+        jobs:
+          type: boolean
+        tenantCode:
+          type: string
+        start:
+          format: int32
+          type: integer
+        limit:
+          format: int32
+          type: integer
+        receivingJobId:
+          type: string
+      type: object
+      x-do-not-generate: true
+      x-konfig-is-parameter:
+      - jobs
+      - tenantCode
+      - start
+      - limit
+      - receivingJobId
+    konfig-generated-schema-single-parameter-schema-get-v1-op-data-versions:
+      properties:
+        tenantCode:
+          type: string
+        limit:
+          format: int32
+          type: integer
+        start:
+          format: int32
+          type: integer
+        numberOfVersions:
+          format: int32
+          type: integer
+      type: object
+      x-do-not-generate: true
+      x-konfig-is-parameter:
+      - tenantCode
+      - limit
+      - start
+      - numberOfVersions
+    konfig-generated-schema-single-parameter-schema-get-v1-op-jobs-processing-jobs-:receivingJobId:
+      properties:
+        tenantCode:
+          type: string
+        limit:
+          format: int32
+          type: integer
+        start:
+          format: int32
+          type: integer
+        receivingJobId:
+          type: string
+      type: object
+      x-do-not-generate: true
+      x-konfig-is-parameter:
+      - tenantCode
+      - limit
+      - start
+      - receivingJobId
+    konfig-generated-schema-single-parameter-schema-delete--v1-op-data-connector-credentials-:id:
+      properties:
+        id:
+          type: string
+        tenantCode:
+          type: string
+      type: object
+      x-do-not-generate: true
+      x-konfig-is-parameter:
+      - id
+      - tenantCode
+  securitySchemes:
+    CookieAuth:
+      in: cookie
+      name: VisierASIDToken
+      type: apiKey
+      x-konfig-globally-required-security: false
+    ApiKeyAuth:
+      in: header
+      name: apikey
+      type: apiKey
+      x-konfig-globally-required-security: true
+    BearerAuth:
+      scheme: bearer
+      type: http
+      x-konfig-globally-required-security: false
+    OAuth2Auth:
+      flows:
+        authorizationCode:
+          authorizationUrl: /v1/auth/oauth2/authorize
+          scopes:
+            read: Grants read access
+            write: Grants write access
+          tokenUrl: /v1/auth/oauth2/token
+        password:
+          scopes:
+            read: Grants read access
+            write: Grants write access
+          tokenUrl: /v1/auth/oauth2/token
+      type: oauth2
+      x-konfig-globally-required-security: false
+
